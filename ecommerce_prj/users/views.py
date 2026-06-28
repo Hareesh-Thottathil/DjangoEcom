@@ -245,3 +245,26 @@ def custom_logout(request):
     logout(request)
     messages.info(request, 'You have been logged out.')
     return redirect('login')
+
+@login_required
+def cancel_order(request, order_id):
+    order = get_object_or_404(
+        Order,
+        id=order_id,
+        user=request.user
+    )
+
+    if order.status == 'cancelled':
+        messages.warning(request, 'Order already cancelled.')
+        return redirect('order_history')
+
+    for item in order.items.all():
+        product = item.product
+        product.stock += item.quantity
+        product.save()
+
+    order.status = 'cancelled'
+    order.save()
+
+    messages.success(request, 'Order cancelled successfully.')
+    return redirect('order_history')

@@ -14,6 +14,7 @@ urlpatterns = [
     path('login/', views.CustomLoginView.as_view(), name='login'),
     path('register/', views.RegisterView.as_view(), name='register'),
     path('logout/', views.custom_logout, name='logout'),
+    path('calcel-order/<int:order_id>/',views.cancel_order, name='cancel_order')
 ]
 
 
