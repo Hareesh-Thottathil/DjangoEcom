@@ -46,4 +46,4 @@ class CheckoutForm(forms.Form):
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['name', 'slug', 'description', 'price', 'stock', 'image', 'category']
+        fields = ['name', 'description', 'price', 'stock', 'image', 'category']
