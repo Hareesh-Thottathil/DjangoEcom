@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}Cart | ShopHub{% endblock %}
+{% block content %}
+<h2>Your Cart</h2>
+{% if cart.items %}
+    <div class="grid">
+        <div class="card" style="grid-column: span 2;">
+            {% for item in cart.items %}
+                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #eee; padding:10px 0;">
+                    <div>
+                        <strong>{{ item.product.name }}</strong><br>
+                        <small>${{ item.product.price }} each</small>
+                    </div>
+                    <div>
+                        <form method="post" action="{% url 'update_cart' item.product.id %}" style="display:inline-block;">
+                            {% csrf_token %}
+                            <input type="number" name="quantity" min="1" max="{{ item.product.stock }}" value="{{ item.quantity }}" style="width:60px;">
+                            <button type="submit" class="btn btn-secondary">Update</button>
+                        </form>
+                        <a class="btn btn-secondary" href="{% url 'remove_from_cart' item.product.id %}">Remove</a>
+                    </div>
+                </div>
+            {% endfor %}
+            <div style="margin-top: 16px; text-align: right;">
+                <h3>Total: ${{ cart.total }}</h3>
+                <a class="btn btn-primary" href="{% url 'checkout' %}">Proceed to Checkout</a>
+            </div>
+        </div>
+    </div>
+{% else %}
+    <div class="card">
+        <p>Your cart is empty.</p>
+        <a class="btn btn-primary" href="{% url 'home' %}">Continue shopping</a>
+    </div>
+{% endif %}
+{% endblock %}

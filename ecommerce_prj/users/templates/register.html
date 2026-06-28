@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+</head>
+<body>
+    <h1>Register</h1>
+    {% if messages %}
+        {% for message in messages %}
+            <p style="color: green;">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+    <form method="POST" action="">
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+            <div style="color: red; border: 1px solid red; padding: 10px; margin: 10px 0;">
+                <p><strong>Errors:</strong></p>
+                {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        {% for field in form %}
+            <div style="margin-bottom: 15px;">
+                {% if field.field.widget.input_type != 'hidden' %}
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label><br>
+                    {{ field }}
+                    {% if field.errors %}
+                        <div style="color: red; margin-top: 5px;">
+                            {% for error in field.errors %}
+                                <small>{{ error }}</small><br>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <div id="sellerFields" style="display: none;">
+            <h3>Seller details</h3>
+            {% if seller_form.non_field_errors %}
+                <div style="color: red; border: 1px solid red; padding: 10px; margin: 10px 0;">
+                    {% for error in seller_form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% for field in seller_form %}
+                <div style="margin-bottom: 15px;">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label><br>
+                    {{ field }}
+                    {% if field.errors %}
+                        <div style="color: red; margin-top: 5px;">
+                            {% for error in field.errors %}
+                                <small>{{ error }}</small><br>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+
+        <button type="submit">Create User</button>
+    </form>
+
+    <p>
+        Already have an account?
+        <a href="{% url 'login' %}">Login here</a>
+    </p>
+
+    <script>
+        const roleField = document.querySelector('select[name="role"]');
+        const sellerFields = document.getElementById('sellerFields');
+        const shopNameInput = document.querySelector('input[name="shop_name"]');
+
+        function toggleSellerFields() {
+            if (!roleField) return;
+            const isSeller = roleField.value === 'seller';
+            sellerFields.style.display = isSeller ? 'block' : 'none';
+            
+            // Toggle required attribute
+            if (shopNameInput) {
+                shopNameInput.required = isSeller;
+            }
+        }
+
+        if (roleField) {
+            roleField.addEventListener('change', toggleSellerFields);
+            toggleSellerFields();
+        }
+    </script>
+</body>
+</html>

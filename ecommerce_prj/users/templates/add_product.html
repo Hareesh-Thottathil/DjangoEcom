@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Add Product | ShopHub{% endblock %}
+{% block content %}
+<div class="card">
+    <h2>Add a New Product</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="btn btn-primary" type="submit">Save Product</button>
+    </form>
+</div>
+{% endblock %}

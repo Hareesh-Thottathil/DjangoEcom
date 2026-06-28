@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}Orders | ShopHub{% endblock %}
+{% block content %}
+<h2>Your Orders</h2>
+{% if orders %}
+    {% for order in orders %}
+        <div class="card" style="margin-bottom: 16px;">
+            <h3>Order #{{ order.id }}</h3>
+            <p><strong>Status:</strong> {{ order.status }}</p>
+            <p><strong>Total:</strong> ${{ order.total_price }}</p>
+            <p><strong>Address:</strong> {{ order.address }}, {{ order.city }}</p>
+            <ul>
+                {% for item in order.items.all %}
+                    <li>{{ item.quantity }} x {{ item.product.name }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endfor %}
+{% else %}
+    <div class="card">
+        <p>You have not placed any orders yet.</p>
+    </div>
+{% endif %}
+{% endblock %}
